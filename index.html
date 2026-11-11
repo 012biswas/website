@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dhaka Smart Route Finder - Real Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">AI SEARCH ALGORITHM PROJECT</p>
+      <h1>Dhaka Smart Route Finder</h1>
+      <p class="subtitle">Real Dhaka OpenStreetMap + custom graph + 8 AI search algorithms</p>
+    </div>
+    <div class="badge">Real Map Version</div>
+  </header>
+
+  <section class="toolbar card">
+    <div class="field"><label>Source</label><select id="source"></select></div>
+    <div class="field"><label>Destination</label><select id="destination"></select></div>
+    <div class="field">
+      <label>Algorithm</label>
+      <select id="algorithm">
+        <option value="bfs">BFS</option>
+        <option value="dfs">DFS</option>
+        <option value="ucs">Uniform-Cost Search</option>
+        <option value="dls">Depth-Limited Search</option>
+        <option value="ids">Iterative Deepening Search</option>
+        <option value="bidir">Bidirectional Search</option>
+        <option value="greedy">Greedy Best-First</option>
+        <option value="astar" selected>A* Search</option>
+      </select>
+    </div>
+    <div class="field hidden" id="depthWrap"><label>Depth Limit</label><input id="depthLimit" type="number" min="0" max="15" value="3"></div>
+    <div class="actions">
+      <button id="runBtn">Run Search</button>
+      <button id="compareBtn" class="purple">Compare All</button>
+      <button id="resetBtn" class="secondary">Reset</button>
+    </div>
+  </section>
+
+  <section class="scenario-row">
+    <b>Scenario:</b>
+    <button class="scenario active" data-scenario="normal">Normal Day</button>
+    <button class="scenario" data-scenario="rush">Rush Hour</button>
+    <button class="scenario" data-scenario="rain">Heavy Rain</button>
+    <button class="scenario" data-scenario="night">Night / Risky</button>
+    <button class="scenario" data-scenario="block">Road Block</button>
+  </section>
+
+  <section class="metrics">
+    <div class="card metric"><span>Algorithm</span><strong id="metricAlgorithm">A*</strong></div>
+    <div class="card metric"><span>Path Cost</span><strong id="metricCost">—</strong></div>
+    <div class="card metric"><span>Expanded Nodes</span><strong id="metricExpanded">—</strong></div>
+    <div class="card metric"><span>Hops</span><strong id="metricHops">—</strong></div>
+  </section>
+
+  <section class="main-grid">
+    <div class="card map-card">
+      <div class="section-head">
+        <div><h2>Real Dhaka Map</h2><p>OpenStreetMap tiles, real location coordinates, custom AI graph overlay.</p></div>
+        <div class="legend">
+          <span><i class="dot source"></i>Source</span><span><i class="dot destination"></i>Destination</span>
+          <span><i class="dot current"></i>Current</span><span><i class="dot visited"></i>Visited</span>
+          <span><i class="line final"></i>Final path</span><span><i class="line blocked"></i>Blocked</span>
+        </div>
+      </div>
+      <div id="map"></div>
+      <p class="note"><b>Note:</b> Map and place coordinates are real/approximate. The graph connections are simplified educational links, not turn-by-turn road geometry.</p>
+    </div>
+
+    <aside class="side-panel">
+      <div class="card side-card"><h3>Status</h3><p id="statusText">Ready to search.</p></div>
+      <div class="card side-card"><h3>Visited / Expanded</h3><p id="visitedText">—</p></div>
+      <div class="card side-card"><h3>Final Path</h3><p id="pathText">—</p></div>
+      <div class="card side-card"><h3>Current Decision</h3><p id="detailText">—</p></div>
+      <div class="card side-card"><h3>Algorithm Logic</h3><p id="algorithmInfo">A* uses f(n)=g(n)+h(n).</p></div>
+    </aside>
+  </section>
+
+  <section id="comparisonSection" class="card comparison hidden">
+    <div class="section-head"><div><h2>Algorithm Comparison</h2><p>Same source, destination and road conditions.</p></div><span id="comparisonNote" class="pill"></span></div>
+    <div class="table-wrap"><table><thead><tr><th>Algorithm</th><th>Found?</th><th>Path</th><th>Hops</th><th>Cost</th><th>Expanded</th></tr></thead><tbody id="compareRows"></tbody></table></div>
+  </section>
+
+  <section class="card road-editor">
+    <div class="section-head"><div><h2>Road Condition Editor</h2><p>Distance is calculated from the real coordinates; change traffic, flood, crime or block a graph edge.</p></div><button id="restoreBtn" class="secondary">Restore Defaults</button></div>
+    <div class="formula"><b>Weight = Distance(km) + 2×Traffic + 3×Flood + 2.5×Crime</b><span>Blocked road = removed from graph</span></div>
+    <div class="table-wrap"><table><thead><tr><th>Road</th><th>Distance km</th><th>Traffic</th><th>Flood</th><th>Crime</th><th>Blocked</th><th>Weight</th></tr></thead><tbody id="roadRows"></tbody></table></div>
+  </section>
+
+  <footer>Internet connection is required for Leaflet/OpenStreetMap tiles.</footer>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
